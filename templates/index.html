@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Plants Classification</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="eb.css">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body style="padding: 0 5%; margin: 8% 0;" data-spy="scroll" data-target="#navbar-scroll" ng-app = "myapp" ng-controller = "mycontroller">
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar-scroll">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                 data-target="#navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">VIRUSFICATION</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+               <ul class="nav navbar-nav navbar-right">
+                  <li class="active"><a href="index.html">Home</a></li>
+                  </ul>
+            </div>
+        </div>
+    </nav>
+       
+       <div class="row">
+        <h1>Instructions:</h1>    
+        <p>Insert plnat image in jpg format.
+        </p>
+        <p>All the input instructions are already mentioned below so it might not make problem.</p>
+           <div class="col-sm-12">
+
+               <form  action="{{ url_for('predict')}}" enctype="multipart/form-data" method="post" style="background-color: #E7E2E1; text-align: center; ">
+                    <div class="form-group" style="text-align: center;">
+                        <h3>Using Plants images made predictions:</h3>
+                    </div><br>
+                    <div class="form-group">
+                     <label for="file">Please insert an image (in jpg or png form):</label>
+                     <input type="file" id="file"  name="file1" class="form-control" required>
+                    </div>
+                    <button id="predict" type="submit" class="btn btn-success btn-lg" style="width: 500px; margin: 0 12%;">SUBMIT</button>
+               </form>
+               <img id="selected_img" src=""/>
+              
+             
+           </div>
+          
+       </div>  
+       <br><br><br><br>
+       <hr>
+       
+       </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        let base64Image;
+        $("#file").change(function(){
+            let reader=new FileReader();
+            reader.onload=function(e){
+                let dataURL=reader.result;
+                $(#selected_img).attr("src",dataURL);
+                base64Image=dataURL.replace("data:image/png;base64,","");
+                console.log(base64Image);
+
+
+            }
+                reader.readAsDataURL($("#image-selector")[0].files[0])
+                $("#msg1").text("")
+
+        });
+        $(#predict).click(function(event)
+        {
+        let message={
+        image:base64Image
+        }
+        console.log(message);
+$.post("http://10.0.0.4:6000/x_ray",JSON.stringfy(message),function(response){
+$('#msg1').text(response.prediction);
+console.log(response);
+});
+        }
+        );
+    </script>
+  
+       <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+    </body>
+</html>
